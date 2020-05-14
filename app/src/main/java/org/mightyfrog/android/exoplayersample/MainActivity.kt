@@ -9,7 +9,8 @@ import com.google.android.exoplayer2.PlaybackPreparer
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.dash.DashMediaSource
 import com.google.android.exoplayer2.upstream.DataSource
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import com.google.android.exoplayer2.util.Util
 import kotlinx.android.synthetic.main.activity_main.toolbar
 import kotlinx.android.synthetic.main.content_main.playerView
@@ -25,7 +26,13 @@ class MainActivity : AppCompatActivity(), PlaybackPreparer {
         setSupportActionBar(toolbar)
 
         val dataSourceFactory: DataSource.Factory =
-            DefaultDataSourceFactory(this, Util.getUserAgent(this, "Test"))
+            DefaultHttpDataSourceFactory(
+                Util.getUserAgent(this, "Test"),
+                null,
+                DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS,
+                DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS,
+                true
+            )
         val mediaSource = DashMediaSource.Factory(dataSourceFactory).createMediaSource(uri)
         player = ExoPlayerFactory.newSimpleInstance(this)
         playerView.player = player

@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.content_main.playerView
 class MainActivity : AppCompatActivity(), PlaybackPreparer {
 
     private lateinit var player: SimpleExoPlayer
-    private val uri: Uri = Uri.parse("https://v.redd.it/hgvyxj9pts841/DASHPlaylist.mpd")
+    private val uri: Uri = Uri.parse("https://bitmovin-a.akamaihd.net/content/playhouse-vr/mpds/105560.mpd")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

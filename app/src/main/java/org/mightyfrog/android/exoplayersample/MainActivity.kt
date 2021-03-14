@@ -4,7 +4,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.KeyEvent
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.exoplayer2.ExoPlayerFactory
+import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.PlaybackPreparer
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.dash.DashMediaSource
@@ -12,13 +12,14 @@ import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import com.google.android.exoplayer2.util.Util
-import kotlinx.android.synthetic.main.activity_main.toolbar
-import kotlinx.android.synthetic.main.content_main.playerView
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.content_main.*
 
 class MainActivity : AppCompatActivity(), PlaybackPreparer {
 
     private lateinit var player: SimpleExoPlayer
-    private val uri: Uri = Uri.parse("https://bitmovin-a.akamaihd.net/content/playhouse-vr/mpds/105560.mpd")
+    private val uri: Uri =
+        Uri.parse("https://bitmovin-a.akamaihd.net/content/playhouse-vr/mpds/105560.mpd")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,11 +34,13 @@ class MainActivity : AppCompatActivity(), PlaybackPreparer {
                 DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS,
                 true
             )
-        val mediaSource = DashMediaSource.Factory(dataSourceFactory).createMediaSource(uri)
-        player = ExoPlayerFactory.newSimpleInstance(this)
+        val mediaSource =
+            DashMediaSource.Factory(dataSourceFactory).createMediaSource(MediaItem.fromUri(uri))
+        player = SimpleExoPlayer.Builder(this).build()
+        player.setMediaSource(mediaSource)
         playerView.player = player
         playerView.setPlaybackPreparer(this)
-        player.prepare(mediaSource)
+        player.prepare()
     }
 
     override fun onResume() {
@@ -58,11 +61,11 @@ class MainActivity : AppCompatActivity(), PlaybackPreparer {
         player.release()
     }
 
-    override fun dispatchKeyEvent(event: KeyEvent?): Boolean {
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
         return playerView.dispatchKeyEvent(event) || super.dispatchKeyEvent(event)
     }
 
     override fun preparePlayback() {
-        player.retry()
+        player.prepare()
     }
 }
